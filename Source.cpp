@@ -213,7 +213,7 @@ Eveniment:
 		if (Verificare == false)
 		{
 			system("CLS");
-			cout << "\nVa rugam introduceti doar litere.\n";
+			cout << "\nVa rugam sa introduceti doar litere.\n";
 			goto Nume_Stadion;
 		}
 		if (nume_stadion == stadion1 || nume_stadion == stadion2 || nume_stadion == stadion3 || nume_stadion == stadion4)
@@ -224,7 +224,7 @@ Eveniment:
 			cout << "\nStadionul introdus nu face parte din lista de stadioane disponibile\n";
 			goto Nume_Stadion;
 		}
-		Operatie2:
+	Operatie2:
 		printf("\nDoriti sa mergeti la un nou meci de fotbal? (1 pentru da, 0 pentru nu)\n");
 		cin >> Categoria_Aleasa;
 		if (!cin)
