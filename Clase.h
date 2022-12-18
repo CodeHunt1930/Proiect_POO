@@ -4,31 +4,6 @@
 #include <string.h>
 using namespace std;
 
-// 15 randuri de cate 10 locuri pentru Categoria 1
-// 10 randuri de cate 10 locuri pentru Categoria 2
-// 5 randuri de cate 10 locuri pentru Loja
-
-/*
-*
-*
-*
-* Matricea Categoria 1 [15][max 10]
-* Matricea Categoria 2 [10][max 10]
-* Matricea Loja [5][max 10]
-*
-*
-* int MC1[15][10]
-* int MC2[10][10]
-* int MC3[5][10]
-*
-*
-*
-*
-*
-*
-*
-*/
-
 // Clasa Teatru
 
 class Bilete_Teatru
@@ -254,8 +229,6 @@ istream& operator>>(istream& in, Bilete_Teatru& BT)
 }
 
 
-
-
 // Clasa Film
 
 class Bilete_Film
@@ -275,8 +248,7 @@ private:
 	string data;
 	string durata_film;
 	int pret;
-	friend Bilete_Film operator+(int valoare, Bilete_Film BF);
-	friend Bilete_Film operator-(int valoare, Bilete_Film BF);
+	friend Bilete_Film operator++(Bilete_Film BF);
 	friend ostream& operator<<(ostream& out, Bilete_Film BF);
 	friend istream& operator>>(istream& in, Bilete_Film& BF);
 public:
@@ -450,18 +422,24 @@ public:
 		if (spectator != nullptr)
 			delete[] this->spectator;
 	}
+
+
+	Bilete_Film operator--(int z)
+	{
+		Bilete_Film copie2 = *this;
+		pret--;
+		return copie2;
+	}
+
 };
 int Bilete_Film::Nr_Total_Locuri = 300;
-Bilete_Film operator+(int valoare, Bilete_Film BF)
+
+Bilete_Film operator++(Bilete_Film BF)
 {
-	BF.pret += valoare;
+	BF.pret++;
 	return BF;
 }
-Bilete_Film operator-(int valoare, Bilete_Film BF)
-{
-	BF.Nr_Total_Locuri -= valoare;
-	return BF;
-}
+
 ostream& operator<<(ostream& out, Bilete_Film BF)
 {
 	out << "Numele de pe bilet este: " << BF.spectator << endl;
@@ -481,14 +459,12 @@ istream& operator>>(istream& in, Bilete_Film& BF)
 }
 
 
-
-
 //Clasa Fotbal
 
 class Bilete_Fotbal
 {
 private:
-	char* spectator;
+	char* spectator1;
 	long nr_telefon;
 	long id_bilet;
 	int nr_consoane;
@@ -502,8 +478,8 @@ private:
 	string data;
 	string durata_meci;
 	int pret;
-	friend Bilete_Fotbal operator+(int valoare, Bilete_Fotbal BFO);
-	friend Bilete_Fotbal operator-(int valoare, Bilete_Fotbal BFO);
+	static char Valid;
+	friend Bilete_Fotbal operator++(Bilete_Fotbal BM);
 	friend ostream& operator<<(ostream& out, Bilete_Fotbal BFO);
 	friend istream& operator>>(istream& in, Bilete_Fotbal& BFO);
 public:
@@ -533,8 +509,8 @@ public:
 		this->durata_meci = durata_meci;
 		if (spectator != nullptr)
 		{
-			this->spectator = new char[strlen(spectator) + 1];
-			strcpy_s(this->spectator, strlen(spectator) + 1, spectator);
+			this->spectator1 = new char[strlen(spectator) + 1];
+			strcpy_s(this->spectator1, strlen(spectator) + 1, spectator);
 		}
 	}
 
@@ -548,26 +524,26 @@ public:
 		this->Rand = s.Rand;
 		this->Loc = s.Loc;
 		this->data = s.data;
-		if (spectator != nullptr)
+		if (spectator1 != nullptr)
 		{
-			this->spectator = new char[strlen(s.spectator) + 1];
-			strcpy_s(this->spectator, strlen(s.spectator) + 1, s.spectator);
+			this->spectator1 = new char[strlen(s.spectator1) + 1];
+			strcpy_s(this->spectator1, strlen(s.spectator1) + 1, s.spectator1);
 		}
 		else
-			this->spectator = nullptr;
+			this->spectator1 = nullptr;
 	}
 
 	Bilete_Fotbal& operator=(const Bilete_Fotbal i)
 	{
 		if (this != &i)
 		{
-			if (spectator != nullptr)
+			if (spectator1 != nullptr)
 			{
-				this->spectator = new char[strlen(i.spectator) + 1];
-				strcpy_s(this->spectator, strlen(i.spectator) + 1, i.spectator);
+				this->spectator1 = new char[strlen(i.spectator1) + 1];
+				strcpy_s(this->spectator1, strlen(i.spectator1) + 1, i.spectator1);
 			}
 			else
-				this->spectator = nullptr;
+				this->spectator1 = nullptr;
 		}
 		return *this;
 	}
@@ -674,24 +650,30 @@ public:
 
 	~Bilete_Fotbal()
 	{
-		if (spectator != nullptr)
-			delete[] this->spectator;
+		if (spectator1 != nullptr)
+			delete[] this->spectator1;
 	}
+
+	bool operator!()
+	{
+		return pret != 0;
+	}
+
+	char& operator[](int index)
+	{
+		if (spectator1 != nullptr && index >= 0 && index < strlen(spectator1))
+			return spectator1[index];
+		else
+			return Valid;
+	}
+
 };
 int Bilete_Fotbal::Nr_Total_Locuri = 300;
-Bilete_Fotbal operator+(int valoare, Bilete_Fotbal BFO)
-{
-	BFO.pret += valoare;
-	return BFO;
-}
-Bilete_Fotbal operator-(int valoare, Bilete_Fotbal BFO)
-{
-	BFO.Nr_Total_Locuri -= valoare;
-	return BFO;
-}
+char Bilete_Fotbal::Valid = -1;
+
 ostream& operator<<(ostream& out, Bilete_Fotbal BFO)
 {
-	out << "Numele de pe bilet este: " << BFO.spectator << endl;
+	out << "Numele de pe bilet este: " << BFO.spectator1 << endl;
 	out << "Numarul biletului dumneavoastra este: ";
 	out << BFO.id_bilet;
 	out << endl;
@@ -703,6 +685,6 @@ ostream& operator<<(ostream& out, Bilete_Fotbal BFO)
 istream& operator>>(istream& in, Bilete_Fotbal& BFO)
 {
 	cout << "Care este numele dumneavoastra? " << endl;
-	in >> BFO.spectator;
+	in >> BFO.spectator1;
 	return in;
 }
